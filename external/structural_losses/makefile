@@ -1,6 +1,6 @@
-nvcc = /usr/local/cuda-8.0/bin/nvcc
-cudalib =  /usr/local/cuda-8.0/lib64
-tensorflow = /orions4-zfs/projects/optas/Virt_Env/tf_1.3/lib/python2.7/site-packages/tensorflow/include
+nvcc = /usr/local/cuda-9.0/bin/nvcc
+cudalib =  /usr/local/cuda-9.0/lib64
+tensorflow = /home/arclabdl1/anaconda3/envs/ylmiao_tf/lib/python2.7/site-packages/tensorflow/include
 
 all: tf_approxmatch_so.so tf_approxmatch_g.cu.o tf_nndistance_so.so tf_nndistance_g.cu.o
 
@@ -24,4 +24,4 @@ tf_nndistance_g.cu.o: tf_nndistance_g.cu
 clean:
 	rm tf_approxmatch_so.so
 	rm tf_nndistance_so.so
-	rm  *.cu.o 
+	rm  *.cu.o
