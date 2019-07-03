@@ -15,12 +15,12 @@ from . in_out import create_dir
 from . autoencoder import AutoEncoder
 from . general_utils import apply_augmentations
 
-try:    
-    from .. external.structural_losses.tf_nndistance import nn_distance
-    from .. external.structural_losses.tf_approxmatch import approx_match, match_cost
-except:
-    print('External Losses (Chamfer-EMD) cannot be loaded. Please install them first.')
-    
+
+from .. external.structural_losses.tf_nndistance import nn_distance
+from .. external.structural_losses.tf_approxmatch import approx_match, match_cost
+#except:
+#    print('External Losses (Chamfer-EMD) cannot be loaded. Please install them first.')
+
 
 class PointNetAutoEncoder(AutoEncoder):
     '''
@@ -37,12 +37,12 @@ class PointNetAutoEncoder(AutoEncoder):
             self.z = c.encoder(self.x, **c.encoder_args)
             self.bottleneck_size = int(self.z.get_shape()[1])
             layer = c.decoder(self.z, **c.decoder_args)
-            
+
             if c.exists_and_is_not_none('close_with_tanh'):
                 layer = tf.nn.tanh(layer)
 
             self.x_reconstr = tf.reshape(layer, [-1, self.n_output[0], self.n_output[1]])
-            
+
             self.saver = tf.train.Saver(tf.global_variables(), max_to_keep=c.saver_max_to_keep)
 
             self._create_loss()
@@ -131,10 +131,10 @@ class PointNetAutoEncoder(AutoEncoder):
             epoch_loss += loss
         epoch_loss /= n_batches
         duration = time.time() - start_time
-        
+
         if configuration.loss == 'emd':
             epoch_loss /= len(train_data.point_clouds[0])
-        
+
         return epoch_loss, duration
 
     def gradient_of_input_wrt_loss(self, in_points, gt_points=None):
