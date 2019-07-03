@@ -11,8 +11,8 @@ from . encoders_decoders import encoder_with_convs_and_symmetry, decoder_with_fc
 def mlp_architecture_ala_iclr_18(n_pc_points, bneck_size, bneck_post_mlp=False):
     ''' Single class experiments.
     '''
-    if n_pc_points != 2048:
-        raise ValueError()
+    #if n_pc_points != 2048:
+    #    raise ValueError()
 
     encoder = encoder_with_convs_and_symmetry
     decoder = decoder_with_fc_only
