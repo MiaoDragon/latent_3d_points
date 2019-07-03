@@ -10,11 +10,12 @@ from latent_3d_points.src.import_tool import fileImport
 from multiprocessing import Pool
 
 import fnmatch
-def pool_pc_length_check(fname):
+def pool_pc_length_check(args):
+    fname, importer, pcd_data_path = args
     return importer.pointcloud_length_check(pcd_fname=pcd_data_path + fname)
 
-def pool_pc_load(fname_and_length):
-    fname, min_length = fname_and_length
+def pool_pc_load(args):
+    fname, min_length, importer, pcd_data_path = args
     data = importer.pointcloud_import(pcd_fname=pcd_data_path + fname)[:min_length]
     return data
 
@@ -51,8 +52,8 @@ def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
         min_length = 1e6 # large to start
         # multiprocessing loading
         pool = Pool(8)
-
-        for i, length in enumerate(pool.imap(pool_pc_length_check, fnames)):
+        args = [(fnames[i], importer, pcd_data_path) for i in range(len(fnames))]
+        for i, length in enumerate(pool.imap(pool_pc_length_check, args)):
             if (length < min_length):
                 min_length = length
         pool.close()
@@ -69,8 +70,8 @@ def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
     pool = Pool(8)
 
     obstacles = []
-    fnames_and_length = [(fnames[i], min_length) for i in range(len(fnames))]
-    for i, data in enumerate(pool.imap(pool_pc_load, fnames_and_length)):
+    args = [(fnames[i], min_length, importer, pcd_data_path) for i in range(len(fnames))]
+    for i, data in enumerate(pool.imap(pool_pc_load, args)):
         if data is not None:
             obstacles.append(data)
     pool.close()
