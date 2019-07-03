@@ -15,11 +15,9 @@ def pool_pc_length_check(fname):
 
 def pool_pc_load(fname_and_length):
     fname, min_length = fname_and_length
-    try:
-        data = importer.pointcloud_import(pcd_fname=pcd_data_path + fname)[:min_length]
-        return data
-    except:
-        return None
+    data = importer.pointcloud_import(pcd_fname=pcd_data_path + fname)[:min_length]
+    return data
+
 
 def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
     """
