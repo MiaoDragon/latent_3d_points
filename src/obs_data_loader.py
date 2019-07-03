@@ -84,7 +84,8 @@ def load_normalized_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)
 			if (fnmatch.fnmatch(file, env+"*")):
 				fnames.append(file)
 				break
-
+		if len(fnames) >= 100:  # break  the loop when there are at least 100 pcs
+			break
 	if min_length is None: # compute minimum length for dataset will take twice as long if necessary
 		min_length = 1e6 # large to start
 		for i, fname in enumerate(fnames):
