@@ -7,6 +7,7 @@ import os.path
 import random
 import sys
 from latent_3d_points.src.import_tool import fileImport
+from multiprocessing import Pool
 
 import fnmatch
 
