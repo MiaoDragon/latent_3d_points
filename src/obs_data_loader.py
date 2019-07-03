@@ -6,7 +6,7 @@ import numpy as np
 import os.path
 import random
 import sys
-from tools.import_tool import fileImport
+from latent_3d_points.src.import_tool import fileImport
 
 import fnmatch
 
