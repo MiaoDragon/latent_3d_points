@@ -27,16 +27,16 @@ def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
 
 	print("Searing for file names...")
 	for i, env in enumerate(env_names):
-		print('env:')
-		print(env)
 		# hacky reordering so that we don't load the last .pcd file which is always corrupt
 		# sort by the time step on the back, hopefully that helps it obtain the earliest possible
 		for file in sorted(os.listdir(pcd_data_path), key=lambda x: int(x.split('Env_')[1].split('_')[1][:-4])):
 			if (fnmatch.fnmatch(file, env+"*")):
-				print('failed')
+				#print('failed')
 				fnames.append(file)
 				break
-
+		print('loaded %d envs:' % (len(fnames)))
+		if len(fnames) >= 100:  # break  the loop when there are at least 100 pcs
+			break
 	if min_length is None: # compute minimum length for dataset will take twice as long if necessary
 		min_length = 1e6 # large to start
 		for i, fname in enumerate(fnames):
