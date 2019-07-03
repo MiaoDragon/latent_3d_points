@@ -101,7 +101,7 @@ def load_ply(file_name, with_faces=False, with_color=False):
 
 
 def pc_loader(f_name):
-    ''' loads a point-cloud saved under ShapeNet's "standar" folder scheme: 
+    ''' loads a point-cloud saved under ShapeNet's "standar" folder scheme:
     i.e. /syn_id/model_name.ply
     '''
     tokens = f_name.split('/')

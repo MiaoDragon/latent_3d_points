@@ -38,12 +38,17 @@ def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
 		if len(fnames) >= 100:  # break  the loop when there are at least 100 pcs
 			break
 	if min_length is None: # compute minimum length for dataset will take twice as long if necessary
+		lengths = []
 		min_length = 1e6 # large to start
-		for i, fname in enumerate(fnames):
-			length = importer.pointcloud_length_check(pcd_fname=pcd_data_path + fname)
+		# multiprocessing loading
+	    pool = Pool(8)
+		def pool_func(fname):
+			return importer.pointcloud_length_check(pcd_fname=pcd_data_path + fname)
+	    for i, length in enumerate(pool.imap(pool_func, fnames)):
 			if (length < min_length):
 				min_length = length
-
+	    pool.close()
+	    pool.join()
 	print("Loading files, minimum point cloud obstacle length: ")
 	print(min_length)
 	N = len(fnames)
@@ -52,13 +57,22 @@ def load_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
 	print("N")
 	print(N)
 	obstacles=np.zeros((N,min_length),dtype=np.float32)
-	for i, fname in enumerate(fnames):
+	# multiprocessing loading
+	pool = Pool(8)
+	def pool_func(fname):
 		try:
-			data = importer.pointcloud_import(pcd_fname=pcd_data_path + fname)
-			obstacles[i] = data[:min_length]
+			data = importer.pointcloud_import(pcd_fname=pcd_data_path + fname)[:min_length]
+			return data
 		except:
-			continue
-
+			return None
+	obstacles = []
+	for i, data in enumerate(pool.imap(pool_func, fnames)):
+		if data is not None:
+			obstacles.append(data)
+	pool.close()
+	pool.join()
+	obstacles = np.stack(obstacles)
+	
 	return obstacles
 
 def load_normalized_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)):
